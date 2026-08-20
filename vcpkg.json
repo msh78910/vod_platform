@@ -7,5 +7,6 @@
     "libpqxx",
     "mongo-cxx-driver",
     "drogon"
-  ]
+  ],
+  "builtin-baseline": "2273a28f34ce5aac8be50b3b6b44da7fc1722e06"
 }
