@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 4.4.2)
+set (ENV{CC} "gcc-13")
+set (ENV{CXX} "g++-13")
+
 # project(test)
 project(HelloWorld)
 
