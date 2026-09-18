@@ -5,8 +5,15 @@
       "name": "vcpkg",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build",
+      
+      "environment": {
+        "CC":"gcc-13",
+        "CXX": "g++-13"
+      },
       "cacheVariables": {
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "CMAKE_C_COMPILER": "gcc-13",
+        "CMAKE_CXX_COMPILER": "g++-13"
       }
     }
   ]
