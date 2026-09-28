@@ -6,6 +6,7 @@
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build",
       
+      "$comment":"بدون کلید زیر حتی با وجود CMAKE_CXX_COMPILER در پایین، بازم build خراب میشه",
       "environment": {
         "CC":"gcc-13",
         "CXX": "g++-13"
