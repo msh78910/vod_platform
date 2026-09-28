@@ -5,35 +5,34 @@ int main()
 {
   try
   {
-    // Connect to the database.  In practice we may have to pass some
-    // arguments to say where the database server is, and so on.
-    // The constructor parses options exactly like libpq's
-    // PQconnectdb/PQconnect, see:
-    // https://www.postgresql.org/docs/10/static/libpq-connect.html
-    pqxx::connection cx;
- 
-    // Start a transaction.  In libpqxx, you always work in one.
+    // Connect to the database.
+    pqxx::connection cx("host=localhost port=5432 dbname=vod user=vod_user password='7891078910'");
+
+    // In libpqxx, you always work in transaction. Start it like:
     pqxx::work tx(cx);
+
+    std::string first_name = "ali";
+    std::string last_name = "shaeri";
+    std::string birthday = "1992-07-18";
+    std::string bio = "very good";
+    std::string url = "some/where";
+    // pqxx::row r = tx.exec("SELECT * from "); //.one_row();
+    pqxx::result r = tx.exec("INSERT INTO public.person(first_name, last_name, birth_date, bio, photo_url)"
+	          "VALUES ($1, $2, $3, $4, $5)"
+            "RETURNING id", pqxx::params{first_name, last_name, birthday, bio, url});
+    std::string uuid = r[0][0].as<std::string>();
+    
+    tx.exec("INSERT INTO public.account(person_id, username, email, password_hash)"
+	          "VALUES ($1, $2, $3, $4)", pqxx::params{uuid, "admin", "admin@gmail.com", "78910"});
  
-    // We'll just ask the database to return the number 1 to us.
-    // The one_row() call checks that the result contains exactly one row
-    // of data, and throws an exception if it does not.  It returns the
-    // row.
-    pqxx::row r = tx.exec("SELECT 1").one_row();
- 
-    // Commit your transaction.  If an exception occurred before this
-    // point, execution will have left the block, and the transaction will
-    // have been destroyed along the way.  In that case, the failed
-    // transaction would implicitly abort instead of getting to this point.
+    // Commit your transaction.  If an exception occurred before this point, execution will have left the block, and the
+    // transaction will have been destroyed along the way.  
+    // In that case, the failed transaction would implicitly abort instead of getting to this point.
     tx.commit();
  
-    // Look at the first and only field in the row, parse it as an integer,
-    // and print it.
-    //
     // "r[0]" returns the first field, which has an "as<...>()" member
-    // function template to convert its contents from their string format
-    // to a type of your choice.
-    std::cout << r[0].as<int>() << std::endl;
+    // function template to convert its contents from string to a type you say
+    std::cout << "done! " /* r[0].as<int>() */ << std::endl;
   }
   catch (std::exception const &e)
   {
